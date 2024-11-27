@@ -164,7 +164,18 @@ export class FightForStyleRestockProvider {
                     }
                 }
             }
-            const randomItem = loopItems[Math.floor(Math.random() * loopItems.length)];
+
+            const itemStock = loopItems.filter(
+                item => item.stock != null && item.stock < 50
+            );
+            
+            let randomItem;
+            if (!itemStock) {
+                randomItem = loopItems[Math.floor(Math.random() * loopItems.length)];
+            } else {
+                randomItem = itemStock[Math.floor(Math.random() * itemStock.length)];
+            }
+
             if (!randomItem || !loopItems) {
                 return;
             }
@@ -191,6 +202,7 @@ export class FightForStyleRestockProvider {
                     },
                 },
             });
+            this.notifier.notify(source, `Vous avez restock ~o~${loopAmount}~s~ ~g~${randomItem.modelLabel} ~s~`, 'success');
         }
 
         // Update repository
