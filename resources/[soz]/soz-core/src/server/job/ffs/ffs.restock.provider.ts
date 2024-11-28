@@ -202,7 +202,7 @@ export class FightForStyleRestockProvider {
                     },
                 },
             });
-            this.notifier.notify(source, `Vous avez restock ~o~${loopAmount}~s~ ~g~${randomItem.modelLabel} ~s~`, 'success');
+            this.notifier.notify(source, `Vous avez restock des ~g~${randomItem.modelLabel} ~s~`, 'success');
         }
 
         // Update repository
