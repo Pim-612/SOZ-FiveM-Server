@@ -46,33 +46,33 @@ export class FightForStyleRestockProvider {
         );
     }
 
-    public garmentToCategory(garment: Garment | LuxuryGarment): number {
+    public garmentToCategory(garment: Garment | LuxuryGarment): number[] {
         switch (garment) {
             case Garment.TOP:
             case LuxuryGarment.TOP:
-                return 1;
+                return [1, 30];
             case Garment.PANT:
             case LuxuryGarment.PANT:
-                return 15;
+                return [15, 50];
             case Garment.SHOES:
             case LuxuryGarment.SHOES:
-                return 25;
+                return [25, 75];
             case Garment.UNDERWEAR:
             case LuxuryGarment.UNDERWEAR:
-                return 21;
+                return [21, -1];
             case Garment.BAG:
             case LuxuryGarment.BAG:
-                return 52;
+                return [52, -1];
             case Garment.GLOVES:
             case LuxuryGarment.GLOVES:
-                return 50;
+                return [50, -1];
             case Garment.UNDERWEAR_TOP:
             case LuxuryGarment.UNDERWEAR_TOP:
-                return 60;
+                return [60, 75];
             case Garment.MASK:
-                return 41;
+                return [41, 30];
             default:
-                return -1;
+                return [-1, -1];
         }
     }
 
@@ -121,8 +121,10 @@ export class FightForStyleRestockProvider {
 
     public async restockLoop(brand: ClothingBrand, garment: Garment | LuxuryGarment, amount: number) {
         const sexes = [PlayerPedHash.Male, PlayerPedHash.Female];
-        const category = this.garmentToCategory(garment);
-
+        const catLim = this.garmentToCategory(garment);
+        const category = catLim[0];
+        const filterLimit = catLim[1];
+        
         if (category == -1) {
             this.logger.error('Invalid category for item ', garment);
             return;
@@ -166,7 +168,7 @@ export class FightForStyleRestockProvider {
             }
 
             const itemStock = loopItems.filter(
-                item => item.stock != null && item.stock < 50
+                item => item.stock != null && item.stock < filterLimit
             );
             
             let randomItem;
